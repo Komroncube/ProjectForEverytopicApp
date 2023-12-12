@@ -1,0 +1,6 @@
+@ProjectForEverytopic_HostAddress = http://localhost:5258
+
+GET {{ProjectForEverytopic_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,0 +1,42 @@
+version: '3.4'
+networks:
+  backend:
+services:
+  sqldb:
+    container_name: everytopic-container
+    image:  mcr.microsoft.com/mssql/server:2022-latest
+    volumes:
+      - ./databases/mssqldb:/var/opt/mssql/data
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Exam!1234#
+    ports:
+      - 1433:1433 
+    networks:
+      - backend
+  projectforeverytopic:
+    image: ${DOCKER_REGISTRY-}projectforeverytopic
+    build:
+      context: .
+      dockerfile: ProjectForEverytopic/Dockerfile
+    environment:
+      - DB_HOST=sqldb
+      - DB_NAME=bookdb
+      - SA_PASSWORD=Exam!1234#
+    networks:
+      - backend
+    depends_on:
+      - sqldb
+
+  authorizationlayer:
+    image: ${DOCKER_REGISTRY-}authorizationlayer
+    build:
+      context: .
+      dockerfile: AuthorizationLayer/Dockerfile
+    environment:
+      - DB_HOST=sqldb
+      - DB_NAME=authdb
+      - SA_PASSWORD=Exam!1234#
+    networks:
+      - backend
+
